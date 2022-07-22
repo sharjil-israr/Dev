@@ -1,0 +1,33 @@
+{% extends 'main.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="row mt-0 pt-0">
+  <div class="card col-md-12 col-sm-12 ml-auto mr-auto mt-0">
+    <div class="card-title">
+      <h3 class="text-center">Add Driver Documents</h3>
+    </div>
+    <div class="card-body">
+      {% crispy driver_document_form %}
+      <br>
+      <br>
+      {% crispy driver_recruitment_document_form %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('#id_dob').datetimepicker('format', 'DD/MM/YYYY');
+    $('#id_driving_licence_issue_date').datetimepicker('format', 'DD/MM/YYYY');
+    $('#id_driving_licence_expiry_date').datetimepicker('format', 'DD/MM/YYYY');
+    $('#id_hgv_licence_issue_date').datetimepicker('format', 'DD/MM/YYYY');
+    $('#id_hazard_issue_date').datetimepicker('format', 'DD/MM/YYYY');
+    $('#id_joining_date').datetimepicker('format', 'DD/MM/YYYY');
+    });
+</script>
+
+{% endblock %}

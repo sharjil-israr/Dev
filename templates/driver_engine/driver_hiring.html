@@ -1,0 +1,66 @@
+{% extends 'main.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="row mt-0 pt-0">
+  <div class="card col-md-12 col-sm-12 ml-auto mr-auto  mt-1 mb-0">
+    <div class="card-body">
+      <div class="text-right">
+        <a class="btn btn-primary mb-5" href="{% url 'add_driver_details' %}">Add New Driver</a>
+      </div>
+      <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+        <thead class="text-center">
+          <th>sl &nbsp &nbsp</th>
+          <th>Name</th>
+          <th>Hiring Status</th>
+          <th class="text-right">Action  &nbsp &nbsp &nbsp</th>
+        </thead>
+        <tbody class="text-center">
+          {% for each in driver_list %}
+          <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{each.name| title}}, {{each.age}} Yrs</td>
+            <td>
+              {% for each2 in each.get_hiring_status %}
+              <span class="badge badge-primary">{{each2}}</span>
+              {% endfor %}
+            </td>
+            <td class="text-right">
+              <a href="{% url 'driver_details' each.id %}"><span class="badge badge-primary">view profile</span></a>
+              <a class="btn btn-link btn-warning btn-just-icon edit" href="{% url 'edit_driver_details' each.id %}"><i class="material-icons">edit</i></a>
+              <a class="btn btn-link btn-danger btn-just-icon close" href="#" onclick="throw_warning('Are you sure, you want to delete this driver?', action_link='{% url "delete_driver" each.id %}')"><i class="material-icons">close</i></a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot class="text-center">
+          <th>sl</th>
+          <th>Name</th>
+          <th>Hiring Status</th>
+          <th class="text-right">Action</th>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#datatables').DataTable({
+      "pagingType": "full_numbers",
+      "lengthMenu": [
+        [10, 25, 50, -1],
+        [10, 25, 50, "All"]
+      ],
+      responsive: true,
+      language: {
+        search: "_INPUT_",
+        searchPlaceholder: "Search records",
+      }
+    });
+  });
+</script>
+{% endblock %}

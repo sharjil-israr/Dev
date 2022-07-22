@@ -1,0 +1,28 @@
+{% extends 'main.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="row mt-0 pt-0">
+  <div class="card col-md-12 col-sm-12 ml-auto mr-auto mt-0">
+    <div class="card-title text-center">
+      <h3 class="text-center">Update Driver Hiring and Overall Status</h3>
+      <p>ability to change Overall status (active/ inactive in system) is available only for drivers which are selected in hiring phase</p>
+    </div>
+    <div class="card-body">
+      {% crispy driver_status_form %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+  $(document).ready(function(){
+    var hiring_status = $('#id_hiring_status').val();
+    if (hiring_status != '2') {
+      $('#div_id_status').hide();
+    }
+  });
+</script>
+{% endblock %}

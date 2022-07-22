@@ -1,0 +1,608 @@
+{% extends 'main.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="row  mt-0">
+  <div class="col-md-12 ml-auto mr-auto">
+    <div class="page-categories">
+      <ul class="nav nav-pills nav-pills-warning nav-pills-icons justify-content-center" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" data-toggle="tab" href="#driver_profile" role="tablist">
+            <i class="material-icons">account_circle</i>Profile
+          </a>
+        </li>
+        {% if driver.hiring_status == '2' %}
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#training_section" role="tablist">
+            <i class="material-icons">model_training</i> Training
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#timeline_section" role="tablist">
+            <i class="material-icons">timeline</i> Timeline
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#summary_section" role="tablist">
+            <i class="material-icons">summarize</i> summary
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#violation_section" role="tablist">
+            <i class="material-icons">warning</i> Violations
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#nmpi_section" role="tablist">
+            <i class="material-icons">feedback</i> NMPI
+          </a>
+        </li>
+        {% endif %}
+      </ul>
+      <div class="tab-content tab-space tab-subcategories">
+        <div class="tab-pane active" id="driver_profile">
+          <div class="card card-profile">
+            <div class="card-avatar">
+              {% if driver.driver_image and driver.driver_image != '0'  %}
+              <img class="img" src="/{{driver.driver_image}}" />
+              {% else %}
+              <img class="img" src="/media/profile_pic/default_profile.png" />
+              {% endif %}
+            </div>
+            <div class="card-body">
+              <div class="card-body text-center mt-0 pt-0">
+                <div id="profile_accordion" role="tablist">
+                  <div class="card-collapse">
+                    <div class="card-header" role="tab" id="heading_bio_data">
+                      <h5 class="mb-0">
+                        <a data-toggle="collapse" href="#collapse_bio_data" aria-expanded="false" aria-controls="collapse_bio_data" class="collapsed text-primary">
+                          <h3>Bio Data {{driver.name}} - {{driver.mobile_number}}</h3>
+                          <i class="material-icons">keyboard_arrow_down</i>
+                        </a>
+                      </h5>
+                    </div>
+                    <div id="collapse_bio_data" class="collapse show" role="tabpanel" aria-labelledby="heading_bio_data" data-parent="#profile_accordion" style="">
+                      <div class="card-body">
+                        <div class="text-right">
+                          <a class="btn btn-warning mb-5" href="{% url 'edit_driver_details' driver.id %}">Edit Biodata</a>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-3 col-sm-12">
+                            <p><strong>Name: </strong><br>{{driver.name}} <span class="badge badge-{{driver.get_status_colour}}">{{driver.get_status_display}}</span></p>
+                          </div>
+                          <div class="col-md-3 col-sm-12">
+                            <p><strong>Mobile: </strong><br>{{driver.mobile_number}}</p>
+                          </div>
+                          <div class="col-md-3 col-sm-12">
+                            <p><strong>Date of Birth: </strong><br>{{driver.dob}}</p>
+                          </div>
+                          <div class="col-md-3 col-sm-12">
+                            <p><strong>Education: </strong><br>{{driver.education}}</p>
+                          </div>
+                          <div class="col-md-3 col-sm-12">
+                            <p><strong>Can Read/ Write: </strong><br>{% if driver.can_read %}Yes{% else %}No{% endif %} / {% if driver.can_write %}Yes{% else %}No{% endif %}</p>
+                          </div>
+                          <div class="col-md-3 col-sm-12">
+                            <p><strong>Driving Licence Number: </strong><br>{{driver.driving_licence_num}}</p>
+                          </div>
+                          <div class="col-md-3 col-sm-12">
+                            <p><strong>Issuing Authority: </strong><br>{{driver.issuing_authority}}</p>
+                          </div>
+                          <div class="col-md-3 col-sm-12">
+                            <p><strong>Driving Licence Issue Date: </strong><br>{{driver.driving_licence_issue_date}}</p>
+                          </div>
+                          <div class="col-md-3 col-sm-12">
+                            <p><strong>Driving Licence Expiry Date: </strong><br>{{driver.driving_licence_expiry_date}} <span class="badge badge-{{driver.get_license_status.colour}}">{{driver.get_license_status.status}}</span></p>
+                          </div>
+                          <div class="col-md-3 col-sm-12">
+                            <p><strong>HGV Issue Date: </strong><br>{{driver.hgv_licence_issue_date}}</p>
+                          </div>
+                          <div class="col-md-3 col-sm-12">
+                            <p><strong>Hazard Issue Date: </strong><br>{{driver.hazard_issue_date}}<span class="badge badge-{{driver.get_hazard_expiry_status.colour}}">{{driver.get_hazard_expiry_status.status}}</span></p>
+                          </div>
+                          <div class="col-md-3 col-sm-12">
+                            <p><strong>Address: </strong><br>{{driver.address}}</p>
+                          </div>
+                          <div class="col-md-3 col-sm-12">
+                            <p><strong>{{driver.get_id_card_type_display}}: </strong><br>{{driver.card_number}}</p>
+                          </div>
+                          <div class="col-md-3 col-sm-12">
+                            <p><strong>Joining Date: </strong><br>{{driver.joining_date}}</p>
+                          </div>
+                          <div class="col-md-3 col-sm-12">
+                            <p><strong>Created At: </strong><br>{{driver.created_at}}</p>
+                          </div>
+                          <div class="col-md-3 col-sm-12">
+                            <p><strong>Created By: </strong><br>{{driver.created_by.get_user_detail}}</p>
+                          </div>
+                          <div class="col-md-3 col-sm-12">
+                            <p><strong>Updated At: </strong><br>{{driver.updated_at}}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-collapse">
+                    <div class="card-header" role="tab" id="heading_behaviour_test">
+                      <h5 class="mb-0">
+                        <a data-toggle="collapse" href="#collapse_behaviour_test" aria-expanded="false" aria-controls="collapse_behaviour_test" class="collapsed text-primary">
+                          <h3>Behaviour Test</h3>
+                          <i class="material-icons">keyboard_arrow_down</i>
+                        </a>
+                      </h5>
+                    </div>
+                    <div id="collapse_behaviour_test" class="collapse" role="tabpanel" aria-labelledby="heading_behaviour_test" data-parent="#profile_accordion" style="">
+                      <div class="card-body">
+                        {% if driver.behaviour_test %}
+                        <div class="row">
+                          <div class="col-md-4 col-sm-12">
+                          </div>
+                          <div class="col-md-4 col-sm-12">
+                            Total score obtained by {{driver}}: <span><strong>{{driver.behaviour_test.get_total_marks}}</strong></span>
+                            {% if driver.behaviour_test.get_result == 'can be hired' %}
+                            <h5 class="text-success text-bold"><strong>{{driver.behaviour_test.get_result}}</strong></h5>
+                            {% elif driver.behaviour_test.get_result == 'needs to be trained'  %}
+                            <h5 class="text-warning text-bold"><strong>{{driver.behaviour_test.get_result}}</strong></h5>
+                            {% else %}
+                            <h5 class="text-danger text-bold"><strong>{{driver.behaviour_test.get_result}}</strong></h5>
+                            {% endif %}
+                          </div>
+                          <div class="col-md-4 col-sm-12">
+                            <a class="btn btn-warning mb-5" href="{% url 'edit_driver_behaviour_details' driver.id %}">Edit Behaviour Test</a>
+                          </div>
+                        </div>
+                        <div class="row mt-2">
+                          {% for each in driver.behaviour_test.get_behaviour_question_and_answer %}
+                          <div class="col-md-3 col-sm-12">
+                            <p class="mb-0"><strong>{{each.q}}</strong></p>
+                            {% if each.a == '5' %}
+                            <p>Agree</p>
+                            {% endif %}
+                          </div>
+                          {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="text-right">
+                          <a class="btn btn-primary mb-5" href="{% url 'add_driver_behaviour_details' driver.id %}">Complete Behaviour Test</a>
+                        </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-collapse">
+                    <div class="card-header" role="tab" id="heading_documents">
+                      <h5 class="mb-0">
+                        <a data-toggle="collapse" href="#collapse_documents" aria-expanded="false" aria-controls="collapse_documents" class="collapsed text-primary">
+                          <h3>Documents</h3>
+                          <i class="material-icons">keyboard_arrow_down</i>
+                        </a>
+                      </h5>
+                    </div>
+                    <div id="collapse_documents" class="collapse" role="tabpanel" aria-labelledby="heading_documents" data-parent="#profile_accordion" style="">
+                      <div class="card-body">
+                        <div class="text-right">
+                          <a class="btn btn-warning mb-5" href="{% url 'add_driver_documents' driver.id %}">Add/ Edit Documents</a>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-3 col-sm-12 p-1">
+                            <h4>Driving License</h4>
+                            {% if driver.licencse_image %}
+                            <a href="/{{driver.licencse_image}}" target="_blank">
+                              <img class="img-thumbnail img-responsive" src="/{{driver.licencse_image}}" alt="" width="300" height="300">
+                            </a>
+                            {% else %}
+                            <p>Not Added Yet</p>
+                            {% endif %}
+                          </div>
+                          <div class="col-md-3 col-sm-12 p-1">
+                            <h4>Hazard Card</h4>
+                            {% if driver.hazard_image %}
+                            <a href="/{{driver.hazard_image}}" target="_blank">
+                              <img class="img-thumbnail img-responsive" src="/{{driver.hazard_image}}" alt="" width="300" height="300">
+                            </a>
+                            {% else %}
+                            <p>Not Added Yet</p>
+                            {% endif %}
+                          </div>
+                          <div class="col-md-3 col-sm-12 p-1">
+                            <h4>Driver Image</h4>
+                            {% if driver.driver_image %}
+                            <a href="/{{driver.driver_image}}" target="_blank">
+                              <img class="img-thumbnail img-responsive" src="/{{driver.driver_image}}" alt="" width="300" height="300">
+                            </a>
+                            {% else %}
+                            <p>Not Added Yet</p>
+                            {% endif %}
+                          </div>
+                          <div class="col-md-3 col-sm-12 p-1">
+                            <h4>DDT Image</h4>
+                            {% if driver.driver_recruitment.ddt_image %}
+                            <a href="/{{driver.driver_recruitment.ddt_image}}" target="_blank">
+                              <img class="img-thumbnail img-responsive" src="/{{driver.driver_recruitment.ddt_image}}" alt="" width="300" height="300">
+                            </a>
+                            {% else %}
+                            <p>Not Added Yet</p>
+                            {% endif %}
+                          </div>
+                          <div class="col-md-3 col-sm-12 p-1">
+                            <h4>Shell Induction Image</h4>
+                            {% if driver.driver_recruitment.shell_induction_image %}
+                            <a href="/{{driver.driver_recruitment.shell_induction_image}}" target="_blank">
+                              <img class="img-thumbnail img-responsive" src="/{{driver.driver_recruitment.shell_induction_image}}" alt="" width="300" height="300">
+                            </a>
+                            {% else %}
+                            <p>Not Added Yet</p>
+                            {% endif %}
+                          </div>
+                          <div class="col-md-3 col-sm-12 p-1">
+                            <h4>Medical Test Image</h4>
+                            {% if driver.driver_recruitment.medical_test_image %}
+                            <a href="/{{driver.driver_recruitment.medical_test_image}}" target="_blank">
+                              <img class="img-thumbnail img-responsive" src="/{{driver.driver_recruitment.medical_test_image}}" alt="" width="300" height="300">
+                            </a>
+                            {% else %}
+                            <p>Not Added Yet</p>
+                            {% endif %}
+                          </div>
+                          <div class="col-md-3 col-sm-12 p-1">
+                            <h4>First Aid Image</h4>
+                            {% if driver.driver_recruitment.first_aid_image %}
+                            <a href="/{{driver.driver_recruitment.first_aid_image}}" target="_blank">
+                              <img class="img-thumbnail img-responsive" src="/{{driver.driver_recruitment.first_aid_image}}" alt="" width="300" height="300">
+                            </a>
+                            {% else %}
+                            <p>Not Added Yet</p>
+                            {% endif %}
+                          </div>
+                          <div class="col-md-3 col-sm-12 p-1">
+                            <h4>Fire Fighting Image</h4>
+                            {% if driver.driver_recruitment.fire_fighting_image %}
+                            <a href="/{{driver.driver_recruitment.fire_fighting_image}}" target="_blank">
+                              <img class="img-thumbnail img-responsive" src="/{{driver.driver_recruitment.fire_fighting_image}}" alt="" width="300" height="300">
+                            </a>
+                            {% else %}
+                            <p>Not Added Yet</p>
+                            {% endif %}
+                          </div>
+                          <div class="col-md-3 col-sm-12 p-1">
+                            <h4>Company Induction Image</h4>
+                            {% if driver.driver_recruitment.company_induction_image %}
+                            <a href="/{{driver.driver_recruitment.company_induction_image}}" target="_blank">
+                              <img class="img-thumbnail img-responsive" src="/{{driver.driver_recruitment.company_induction_image}}" alt="" width="300" height="300">
+                            </a>
+                            {% else %}
+                            <p>Not Added Yet</p>
+                            {% endif %}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-collapse">
+                    <div class="card-header" role="tab" id="heading_driver_recruitment">
+                      <h5 class="mb-0">
+                        <a data-toggle="collapse" href="#collapse_driver_recruitment" aria-expanded="false" aria-controls="collapse_driver_recruitment" class="collapsed text-primary">
+                          <h3>Recruitment Details</h3>
+                          <i class="material-icons">keyboard_arrow_down</i>
+                        </a>
+                      </h5>
+                    </div>
+                    <div id="collapse_driver_recruitment" class="collapse" role="tabpanel" aria-labelledby="heading_driver_recruitment" data-parent="#profile_accordion" style="">
+                      <div class="card-body">
+                        <div class="text-right">
+                          {% if not driver.driver_recruitment %}
+                          <a class="btn btn-primary mb-5" href="{% url 'add_driver_recruitment_details' driver.id %}">Add Recruitment Details</a>
+                          {% else %}
+                          <a class="btn btn-warning mb-5" href="{% url 'edit_driver_recruitment_details' driver.id %}">Edit Recruitment Details</a>
+                          {% endif %}
+                        </div>
+                        <div class="row">
+                          <div class="col-md-3 col-sm-12">
+                            <p><strong>senior Driver Test Date: </strong><br>{{driver.driver_recruitment.senior_driver_test_date}}</p>
+                          </div>
+                          <div class="col-md-3 col-sm-12">
+                            <p><strong>senior Driver: </strong><br>{{driver.driver_recruitment.senior_driver}}</p>
+                          </div>
+                          <div class="col-md-3 col-sm-12">
+                            <p><strong>medical Test Date: </strong><br>{{driver.driver_recruitment.medical_test_date}}</p>
+                          </div>
+                          <div class="col-md-3 col-sm-12">
+                            <p><strong>First Aid Date: </strong><br>{{driver.driver_recruitment.first_aid_date}}</p>
+                          </div>
+                          <div class="col-md-3 col-sm-12">
+                            <p><strong>Fire Fighting Date: </strong><br>{{driver.driver_recruitment.fire_fighting_date}}</p>
+                          </div>
+                          <div class="col-md-3 col-sm-12">
+                            <p><strong>Company Induction Date: </strong><br>{{driver.driver_recruitment.company_induction_date}}</p>
+                          </div>
+                          <div class="col-md-3 col-sm-12">
+                            <p><strong>DDT Date: </strong><br>{{driver.driver_recruitment.ddt_date}}</p>
+                          </div>
+                          <div class="col-md-3 col-sm-12">
+                            <p><strong>Shell Induction Date: </strong><br>{{driver.driver_recruitment.shell_induction_date}}</p>
+                          </div>
+                          <div class="col-md-3 col-sm-12">
+                            <p><strong>Created At: </strong><br>{{driver.driver_recruitment.created_at}}</p>
+                          </div>
+                          <div class="col-md-3 col-sm-12">
+                            <p><strong>Created By: </strong><br>{{driver.driver_recruitment.created_by.get_user_detail}}</p>
+                          </div>
+                          <div class="col-md-3 col-sm-12">
+                            <p><strong>Updated At: </strong><br>{{driver.driver_recruitment.updated_at}}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-collapse">
+                    <div class="card-header" role="tab" id="heading_bank_details">
+                      <h5 class="mb-0">
+                        <a data-toggle="collapse" href="#collapse_bank_details" aria-expanded="false" aria-controls="collapse_bank_details" class="collapsed text-primary">
+                          <h3>Bank Details</h3>
+                          <i class="material-icons">keyboard_arrow_down</i>
+                        </a>
+                      </h5>
+                    </div>
+                    <div id="collapse_bank_details" class="collapse" role="tabpanel" aria-labelledby="heading_bank_details" data-parent="#profile_accordion" style="">
+                      <div class="card-body">
+                        <div class="row">
+                          <div class="col-md-3 col-sm-12">
+                            <p><strong>Bank AC Holder Name: </strong><br>{{driver.bank_ac_holder_name}}</p>
+                          </div>
+                          <div class="col-md-3 col-sm-12">
+                            <p><strong>Bank AC Number: </strong><br>{{driver.bank_ac_number}}</p>
+                          </div>
+                          <div class="col-md-3 col-sm-12">
+                            <p><strong>Bank Name: </strong><br>{{driver.bank_name}}</p>
+                          </div>
+                          <div class="col-md-3 col-sm-12">
+                            <p><strong>IFSC Code: </strong><br>{{driver.ifsc_code}}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="card-collapse">
+                    <div class="card-header" role="tab" id="heading_driver_status">
+                      <h5 class="mb-0">
+                        <a data-toggle="collapse" href="#collapse_driver_status" aria-expanded="false" aria-controls="collapse_driver_status" class="collapsed text-primary">
+                          <h3>Change Driver Status/ Leave Status</h3>
+                          <i class="material-icons">keyboard_arrow_down</i>
+                        </a>
+                      </h5>
+                    </div>
+                    <div id="collapse_driver_status" class="collapse" role="tabpanel" aria-labelledby="heading_driver_status" data-parent="#profile_accordion" style="">
+                      <div class="card-body">
+                        <div class="row">
+                          <div class="col-md-4 col-sm-12">
+                            <h4>Current Hiring Status</h4>
+                            {% if driver.hiring_status == '3' %}
+                            <p class="badge badge-danger" >Current Status: {{driver.get_hiring_status_display}}</p>
+                            {% endif %}
+                            {% if driver.hiring_status == '2' %}
+                            <p class="badge badge-success" >Current Status: {{driver.get_hiring_status_display}}</p>
+                            {% else %}
+                            <p class="badge badge-warning" >Current Status: {{driver.get_hiring_status_display}}</p>
+                            {% endif %}
+                            <br>
+                            <a class="btn btn-primary mb-5" href="{% url 'change_driver_status' driver.id %}">Change Hiring Status</a>
+                          </div>
+                          <div class="col-md-4 col-sm-12">
+                            <h4>Current Working Status</h4>
+                            {% if driver.status == '1' %}
+                            <p class="badge badge-success" >Current Status: {{driver.get_status_display}}</p>
+                            {% else %}
+                            <p class="badge badge-warning" >Current Status: {{driver.get_status_display}}</p>
+                            {% endif %}
+                            <br>
+                            <!-- show ability to change working status for only selected/hired drivers -->
+                            {% if driver.hiring_status == '2' %}
+                            <a class="btn btn-primary mb-5" href="{% url 'change_driver_status' driver.id %}">Change Working Status</a>
+                            {% endif %}
+                          </div>
+                          <div class="col-md-4 col-sm-12">
+                            {% if driver.status == '1' %}
+                              <h4>Current Leave Status</h4>
+                              {% if driver.on_leave %}
+                                <p class="badge badge-dark" >On Leave</p>
+                              {% else %}
+                                <p class="badge badge-success">working</p>
+                                <br>
+                                <!-- show ability to add leaves only for status = active drivers -->
+                                <a class="btn btn-primary" href="#">Add Driver Leave</a>
+                              {% endif %}
+                            {% endif %}
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+              
+              
+
+
+
+
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane" id="training_section">
+          <div class="card">
+            <div class="card-header text-center mb-0 pb-0">
+              <h2 class="card-title">Roles</h2>
+              <p class="card-category">
+                click a role to view the permissions associated with it.
+                <br>
+                Roles give specific permissions to the user.
+              </p>
+            </div>
+            <div class="card-body text-center mt-0 pt-0">
+              <div id="role_accordion" role="tablist">
+                {% if not user_profile %}
+                {% for each in request.user.get_user_detail.get_all_roles %}
+                <div class="card-collapse">
+                  <div class="card-header" role="tab" id="heading_role{{forloop.counter}}">
+                    <h5 class="mb-0">
+                      <a data-toggle="collapse" href="#collapse_role{{forloop.counter}}" aria-expanded="false" aria-controls="collapse_role{{forloop.counter}}" class="collapsed text-primary">
+                        {{each}}
+                        <i class="material-icons">keyboard_arrow_down</i>
+                      </a>
+                    </h5>
+                  </div>
+                  <div id="collapse_role{{forloop.counter}}" class="collapse" role="tabpanel" aria-labelledby="heading_role{{forloop.counter}}" data-parent="#role_accordion" style="">
+                    <div class="card-body">
+                      {% for each2 in each.get_permissions_of_role  %}
+                      <p>{{each2}}</p>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                {% for each in user_profile.get_user_detail.get_all_roles %}
+                <div class="card-collapse">
+                  <div class="card-header" role="tab" id="heading_role{{forloop.counter}}">
+                    <h5 class="mb-0">
+                      <a data-toggle="collapse" href="#collapse_role{{forloop.counter}}" aria-expanded="false" aria-controls="collapse_role{{forloop.counter}}" class="collapsed text-primary">
+                        {{each}}
+                        <i class="material-icons">keyboard_arrow_down</i>
+                      </a>
+                    </h5>
+                  </div>
+                  <div id="collapse_role{{forloop.counter}}" class="collapse" role="tabpanel" aria-labelledby="heading_role{{forloop.counter}}" data-parent="#role_accordion" style="">
+                    <div class="card-body">
+                      {% for each2 in each.get_permissions_of_role  %}
+                      <p>{{each2}}</p>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane" id="timeline_section">
+          <div class="card">
+            <div class="card-header text-center mb-0 pb-0">
+              <h2 class="card-title">Groups</h2>
+              <p class="card-category">
+                click a grpup to view the permissions associated with it.
+                <br>
+                Groups give specific permissions to the user.
+              </p>
+            </div>
+            <div class="card-body text-center mt-0 pt-0">
+              <div id="group_accordion" role="tablist">
+                {% if not user_profile %}
+                {% for each in request.user.get_user_detail.get_all_groups %}
+                <div class="card-collapse">
+                  <div class="card-header" role="tab" id="heading_group{{forloop.counter}}">
+                    <h5 class="mb-0">
+                      <a data-toggle="collapse" href="#collapse_group{{forloop.counter}}" aria-expanded="false" aria-controls="collapse_group{{forloop.counter}}" class="collapsed text-primary">
+                        {{each}}
+                        <i class="material-icons">keyboard_arrow_down</i>
+                      </a>
+                    </h5>
+                  </div>
+                  <div id="collapse_group{{forloop.counter}}" class="collapse" role="tabpanel" aria-labelledby="heading_group{{forloop.counter}}" data-parent="#group_accordion" style="">
+                    <div class="card-body">
+                      {% for each2 in each.get_permissions_of_group %}
+                      <p>{{each2}}</p>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                {% for each in user_profile.get_user_detail.get_all_groups %}
+                <div class="card-collapse">
+                  <div class="card-header" role="tab" id="heading_group{{forloop.counter}}">
+                    <h5 class="mb-0">
+                      <a data-toggle="collapse" href="#collapse_group{{forloop.counter}}" aria-expanded="false" aria-controls="collapse_group{{forloop.counter}}" class="collapsed text-primary">
+                        {{each}}
+                        <i class="material-icons">keyboard_arrow_down</i>
+                      </a>
+                    </h5>
+                  </div>
+                  <div id="collapse_group{{forloop.counter}}" class="collapse" role="tabpanel" aria-labelledby="heading_group{{forloop.counter}}" data-parent="#group_accordion" style="">
+                    <div class="card-body">
+                      {% for each2 in each.get_permissions_of_group %}
+                      <p>{{each2}}</p>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane" id="summary_section">
+          <div class="card">
+            <div class="card-header text-center mb-0 pb-0">
+              <h2 class="card-title">Custom Permission</h2>
+              <p class="card-category">
+                User acquired permission to access page using roles and groups.
+                <br>
+                Custom permissions are permissions that are not a part of any role or group.
+              </p>
+            </div>
+            <div class="card-body text-center mt-0 pt-0">
+              {% if not user_profile %}
+              {% for each in request.user.get_user_detail.get_all_custom_permissions %}
+              <p>{{each}}</p>
+              {% endfor %}
+              {% else %}
+              {% for each in user_profile.get_user_detail.get_all_custom_permissions %}
+              <p>{{each}}</p>
+              {% endfor %}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane" id="violation_section">
+          <div class="card">
+            <div class="card-header text-center mb-0 pb-0">
+              <h2 class="card-title">Tasks</h2>
+              <p class="card-category">
+                list of daily, weekly, monthly tasks assigned to the user because they are assigned a particular role or group.
+              </p>
+            </div>
+            <div class="card-body text-center mt-0 pt-0">
+              todo here
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane" id="nmpi_section">
+          <div class="card">
+            <div class="card-header text-center mb-0 pb-0">
+              <h2 class="card-title">Tasks</h2>
+              <p class="card-category">
+                list of daily, weekly, monthly tasks assigned to the user because they are assigned a particular role or group.
+              </p>
+            </div>
+            <div class="card-body text-center mt-0 pt-0">
+              todo here
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}
